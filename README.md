@@ -7,7 +7,7 @@
 
 ### 투자 매매전략을 공유하고 중개하는 소셜 플랫폼, 트레들리
 
-🔗 [트레들리 바로가기](https://www.tradely.co.kr/)
+🔗 [트레들리 바로가기](https://www.2ven.shop/)
 
 </div>
 
