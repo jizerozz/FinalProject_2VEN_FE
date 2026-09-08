@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 
 import { css } from '@emotion/react';
 import { BiPlus } from 'react-icons/bi';
@@ -28,6 +28,7 @@ import useToastStore from '@/stores/toastStore';
 import theme from '@/styles/theme';
 import { UserRole } from '@/types/route';
 import { DailyAnalysisProps, AnalysisDataProps } from '@/types/strategyDetail';
+import { mapToDailyAnalysisData } from '@/utils/mappers';
 import { isValidInputNumber, isValidPossibleDate } from '@/utils/statistics';
 
 const DailyAnalysis = ({ strategyId, attributes, userId, role }: AnalysisProps) => {
@@ -58,17 +59,8 @@ const DailyAnalysis = ({ strategyId, attributes, userId, role }: AnalysisProps) 
     alldeleteStatus === 'pending';
 
   const normalizedData = useMemo(() => {
-    if (!dailyAnalysis) return [];
-    return dailyAnalysis.map((data: AnalysisDataProps) => ({
-      dataId: data.dailyStrategicStatisticsId,
-      date: data.inputDate,
-      principal: data.principal,
-      dep_wd_price: data.depWdPrice,
-      profit_loss: data.dailyProfitLoss,
-      pl_rate: Math.round(data.dailyPlRate * 100) / 100,
-      cumulative_profit_loss: data.cumulativeProfitLoss,
-      cumulative_profit_loss_rate: Math.round(data.cumulativeProfitLossRate * 100) / 100,
-    }));
+    if (!dailyAnalysis || !Array.isArray(dailyAnalysis)) return [];
+    return dailyAnalysis.map(mapToDailyAnalysisData);
   }, [dailyAnalysis]);
 
   const handleOpenModal = () => {
@@ -109,7 +101,7 @@ const DailyAnalysis = ({ strategyId, attributes, userId, role }: AnalysisProps) 
     });
 
   const isDuplicatedValue = (modalData: InputTableProps[]) => {
-    const existingDates = normalizedData.map((item: DailyAnalysisProps) => item.date);
+    const existingDates = normalizedData.map((item) => item.date);
     return modalData.filter((data) => existingDates.includes(data.date));
   };
 
@@ -195,8 +187,8 @@ const DailyAnalysis = ({ strategyId, attributes, userId, role }: AnalysisProps) 
         if (!updatedData) return false;
 
         const duplicate = normalizedData
-          .filter((item: DailyAnalysisProps) => item.date !== data.date)
-          .map((item: DailyAnalysisProps) => item.date)
+          .filter((item) => item.date !== data.date)
+          .map((item) => item.date)
           .includes(updatedData.date);
 
         const limitDates = isValidPossibleDate(updatedData.date);
@@ -340,11 +332,6 @@ const DailyAnalysis = ({ strategyId, attributes, userId, role }: AnalysisProps) 
       }
     );
   };
-
-  useEffect(() => {
-    setSelectedData([]);
-    setSelectAll(false);
-  }, [pagination.currentPage]);
 
   if (isLoading) {
     return (

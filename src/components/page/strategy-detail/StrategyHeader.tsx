@@ -16,15 +16,16 @@ import useContentModalStore from '@/stores/contentModalStore';
 import useToastStore from '@/stores/toastStore';
 import theme from '@/styles/theme';
 import { UserRole } from '@/types/route';
+import { isAdmin, isStrategyOwner, isTrader } from '@/utils/statusUtils';
 
 interface StrategyHeaderProps {
-  id: number;
+  strategyId: number;
   strategyTitle: string;
-  traderId: string;
-  isStrategyApproved: string;
+  memberId: string;
+  isApproved: string;
   isApprovedState: boolean;
   isTerminated: boolean;
-  isFollowing: boolean;
+  isFollowed: boolean;
   onDelete: (id: number) => void;
   onEnd: () => void;
   onApproval: () => void;
@@ -32,19 +33,19 @@ interface StrategyHeaderProps {
 }
 
 export const StrategyHeader = ({
-  id,
+  strategyId,
   strategyTitle,
-  traderId,
-  isStrategyApproved,
+  memberId,
+  isApproved,
   isApprovedState,
   isTerminated,
-  isFollowing: initialIsFollowing,
+  isFollowed: initialisFollowed,
   onEnd,
   onDelete,
   onApproval,
   refetch,
 }: StrategyHeaderProps) => {
-  const [isFollowing, setIsFollowing] = useState(initialIsFollowing);
+  const [isFollowed, setisFollowed] = useState(initialisFollowed);
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuthStore();
@@ -60,8 +61,8 @@ export const StrategyHeader = ({
     navigate(`${ROUTES.STRATEGY.INQUIRIES}`, {
       state: {
         strategyTitle,
-        strategyId: id,
-        traderId,
+        strategyId,
+        memberId,
       },
     });
   };
@@ -89,10 +90,10 @@ export const StrategyHeader = ({
           return false;
         }
 
-        followStrategy(selectedFolderId, id.toString())
+        followStrategy(selectedFolderId, strategyId.toString())
           .then(() => {
             showToast('전략이 폴더에 성공적으로 추가되었습니다.');
-            setIsFollowing(true);
+            setisFollowed(true);
             refetch();
           })
           .catch(() => {
@@ -106,9 +107,9 @@ export const StrategyHeader = ({
 
   const handleUnfollow = async () => {
     try {
-      await unfollowStrategy(id);
+      await unfollowStrategy(strategyId);
       showToast('전략이 언팔로우되었습니다.');
-      setIsFollowing(false);
+      setisFollowed(false);
       refetch();
     } catch (error) {
       showToast('전략 언팔로우에 실패했습니다.', 'error');
@@ -127,7 +128,7 @@ export const StrategyHeader = ({
 
   return (
     <div css={actionAreaStyle}>
-      {isStrategyApproved === 'Y' ? (
+      {isApproved === 'Y' ? (
         <button
           css={shareButtonStyle}
           onClick={() => handleCopy(`${import.meta.env.VITE_FRONT_URL}${location.pathname}`)}
@@ -138,10 +139,10 @@ export const StrategyHeader = ({
       ) : (
         <div></div>
       )}
-      {(userRole === 'ROLE_ADMIN' && user?.authorized) ||
-      (userRole === 'ROLE_TRADER' && user?.memberId === traderId) ? ( // 트레이더 전용 버튼
+      {(isAdmin(userRole) && user?.authorized) ||
+      (user && isTrader(userRole) && isStrategyOwner(memberId, user)) ? ( // 트레이더 전용 버튼
         <div css={buttonAreaStyle}>
-          <Button size='xs' variant='secondaryGray' width={90} onClick={() => onDelete(id)}>
+          <Button size='xs' variant='secondaryGray' width={90} onClick={() => onDelete(strategyId)}>
             삭제
           </Button>
           {!isTerminated && (
@@ -151,18 +152,18 @@ export const StrategyHeader = ({
                 variant='neutral'
                 width={90}
                 onClick={() => {
-                  handleMoveEditPage(String(id));
+                  handleMoveEditPage(String(strategyId));
                 }}
               >
                 수정
               </Button>
             </>
           )}
-          {isStrategyApproved === 'P' ? (
+          {isApproved === 'P' ? (
             <Button size='xs' width={120} disabled>
               승인대기
             </Button>
-          ) : isStrategyApproved === 'Y' ? (
+          ) : isApproved === 'Y' ? (
             <Button size='xs' width={120} onClick={onEnd} disabled={isTerminated}>
               운용종료
             </Button>
@@ -185,7 +186,7 @@ export const StrategyHeader = ({
           >
             문의하기
           </Button>
-          {isFollowing ? (
+          {isFollowed ? (
             <Button size='sm' variant='neutral' width={124} onClick={handleUnfollow}>
               전략 언팔로우
             </Button>

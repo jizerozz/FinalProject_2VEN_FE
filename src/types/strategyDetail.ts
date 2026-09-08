@@ -6,7 +6,7 @@ export interface StrategyDetailProps {
   strategyIACEntities: InvestmentAssetClass[];
   tradingCycleName: string;
   tradingCycleIcon: string;
-  traderId: string;
+  memberId: string;
   traderName: string;
   traderImage: string;
   strategyId: number;
@@ -14,6 +14,8 @@ export interface StrategyDetailProps {
   minInvestmentAmount: string;
   strategyOverview: string;
   followersCount: number;
+  requestAvailable: boolean;
+  strategyStatusCode: string;
   writedAt: string;
   isPosted: 'Y' | 'N';
   isGranted: 'Y' | 'N';
@@ -29,6 +31,7 @@ export interface InputDailyAnalysisProps {
   payload: DailyAnalysisProps[];
 }
 
+//일간분석 테이블 데이터
 export interface AnalysisDataProps {
   dailyStrategicStatisticsId: number;
   inputDate: string;
@@ -38,6 +41,18 @@ export interface AnalysisDataProps {
   dailyPlRate: number;
   cumulativeProfitLoss: number;
   cumulativeProfitLossRate: number;
+}
+
+//월간분석 테이블 데이터
+export interface MonthlyDataProps {
+  strategyMonthlyDataId: number;
+  analysisMonth: string;
+  monthlyAveragePrincipal: number;
+  monthlyDepWdAmount: number;
+  monthlyPl: number;
+  monthlyReturn: number;
+  monthlyCumulativePl: number;
+  monthlyCumulativeReturn: number;
 }
 
 export interface StatisticsProps {

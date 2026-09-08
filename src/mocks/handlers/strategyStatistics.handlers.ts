@@ -40,7 +40,7 @@ const statisticsData = [
 
 export const statisticsHandlers = [
   http.get('/api/strategies/:strategyId/statistics', async ({ params, request }) => {
-    const strategyId = parseInt(params.strategyId[0], 10);
+    const strategyId = parseInt(params.strategyId?.[0] ?? '', 10);
     const authHeader = request.headers.get('Auth');
     if (authHeader !== 'admin') {
       return HttpResponse.json(

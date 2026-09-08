@@ -1,4 +1,5 @@
 import { SearchedDetailStrategy, SearchedStrategy, SearchedTrader } from '@/types/search';
+import { AnalysisDataProps, MonthlyDataProps } from '@/types/strategyDetail';
 
 export const mapToTraderData = (trader: SearchedTrader) => ({
   traderId: trader.memberId,
@@ -35,4 +36,28 @@ export const mapToStrategyDetailData = (strategy: SearchedDetailStrategy) => ({
   mdd: strategy.mdd,
   smscore: strategy.smScore,
   followers_count: strategy.followersCount,
+});
+
+// 일간분석 테이블 mapper
+export const mapToDailyAnalysisData = (data: AnalysisDataProps) => ({
+  dataId: data.dailyStrategicStatisticsId,
+  date: data.inputDate,
+  principal: data.principal,
+  dep_wd_price: data.depWdPrice,
+  profit_loss: data.dailyProfitLoss,
+  pl_rate: Math.round(data.dailyPlRate * 100) / 100,
+  cumulative_profit_loss: data.cumulativeProfitLoss,
+  cumulative_profit_loss_rate: Math.round(data.cumulativeProfitLossRate * 100) / 100,
+});
+
+// 월간분석 테이블 mapper
+export const mapToMonthlyAnalysisData = (data: MonthlyDataProps) => ({
+  dataId: data.strategyMonthlyDataId,
+  date: data.analysisMonth,
+  principal: data.monthlyAveragePrincipal,
+  dep_wd_price: data.monthlyDepWdAmount,
+  profit_loss: data.monthlyPl,
+  pl_rate: data.monthlyReturn,
+  cumulative_profit_loss: data.monthlyCumulativePl,
+  cumulative_profit_loss_rate: data.monthlyCumulativeReturn,
 });

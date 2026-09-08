@@ -1,6 +1,8 @@
 import { css } from '@emotion/react';
 import { Link } from 'react-router-dom';
 
+import SafeImage from '@/components/common/SafeImage';
+import StrategyIcon from '@/components/common/StrategyIcon';
 import theme from '@/styles/theme';
 
 interface StrategyData {
@@ -37,11 +39,11 @@ const defaultColumns: ColumnConfig[] = [
       <div css={strategyTitleContainerStyle}>
         <div css={strategyTitleStyle}>{strategy.strategyTitle}</div>
         <div css={iconStyle}>
-          <img src={strategy.tradingTypeIcon} alt='매매유형' height={18} />
-          <img src={strategy.cycleIcon} alt='주기' height={18} />
-          {strategy.investmentAssetClassesIcon
-            ?.slice(0, 2)
-            .map((icon) => <img key={icon} src={icon} alt={icon} height={18} />)}
+          <StrategyIcon src={strategy.tradingTypeIcon} alt='매매유형' height={22} />
+          <StrategyIcon src={strategy.cycleIcon} alt='주기' height={22} />
+          {strategy.investmentAssetClassesIcon?.slice(0, 2).map((icon) => (
+            <StrategyIcon key={icon} src={icon} alt='종목 아이콘' height={22} />
+          ))}
           {(strategy.investmentAssetClassesIcon?.length ?? 0) > 2 && (
             <div css={countStyle}>+{strategy.investmentAssetClassesIcon.length - 2}</div>
           )}
@@ -55,7 +57,11 @@ const defaultColumns: ColumnConfig[] = [
     width: '310px',
     render: (strategy) => (
       <div css={graphStyle}>
-        {strategy.analytics_graph ? <img src={strategy.analytics_graph} alt='분석 그래프' /> : '-'}
+        {strategy.analytics_graph ? (
+          <SafeImage src={strategy.analytics_graph} alt='분석 그래프' width={240} height={80} />
+        ) : (
+          '-'
+        )}
       </div>
     ),
   },
@@ -152,7 +158,9 @@ const rowStyle = (gridTemplate: string) => css`
   display: grid;
   grid-template-columns: ${gridTemplate};
   align-items: center;
-  height: 140px;
+  min-height: 140px;
+  padding: 16px 0;
+  box-sizing: border-box;
   background: ${theme.colors.main.white};
   color: ${theme.colors.gray[900]};
   border-bottom: 1px solid ${theme.colors.gray[300]};
@@ -163,6 +171,8 @@ const rowStyle = (gridTemplate: string) => css`
 const headerStyle = (gridTemplate: string) => css`
   ${rowStyle(gridTemplate)};
   height: 56px;
+  min-height: 56px;
+  padding: 0;
   background-color: ${theme.colors.gray[100]};
   color: ${theme.colors.gray[700]};
   border-bottom: 1px solid ${theme.colors.gray[500]};
@@ -218,11 +228,13 @@ const yieldStyle = css`
 `;
 
 const mddStyle = (mdd: string | number | undefined) => css`
-  color: ${(mdd as number) === 0 || mdd === '-' || mdd === undefined
-    ? theme.colors.gray[900]
-    : (mdd as number) < 0
-      ? theme.colors.main.blue
-      : theme.colors.main.red};
+  color: ${
+    (mdd as number) === 0 || mdd === '-' || mdd === undefined
+      ? theme.colors.gray[900]
+      : (mdd as number) < 0
+        ? theme.colors.main.blue
+        : theme.colors.main.red
+  };
 `;
 
 const emptyStyle = css`

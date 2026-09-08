@@ -7,7 +7,6 @@ import Input from '@/components/common/Input';
 const InputTestPage = () => {
   const [emailValue, setEmailValue] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
-  const [searchValue, setSearchValue] = useState('');
 
   // 비밀번호 유효성 검사
   const validatePassword = (value: string) => ({
@@ -147,20 +146,6 @@ const InputTestPage = () => {
                 onChange={(e) => setPasswordValue(e.target.value)}
                 validate={validatePassword}
                 onInputValidation={(isValid) => console.log('Password validation:', isValid)}
-                customStyle={css`
-                  width: 300px;
-                  text-indent: 10px;
-                `}
-              />
-            </div>
-            <div>
-              <h3>Search Input with Clear Button</h3>
-              <Input
-                leftIcon='search'
-                placeholder='Search...'
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-                showClearButton
                 customStyle={css`
                   width: 300px;
                   text-indent: 10px;

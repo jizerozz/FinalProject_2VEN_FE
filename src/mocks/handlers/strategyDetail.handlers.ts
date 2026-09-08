@@ -151,7 +151,7 @@ export const strategyData = [
 export const strategyDetailHandlers = [
   //전략 기본 정보 조회 핸들러
   http.get('/api/strategy-list/:id', ({ request, params }) => {
-    const paramsId = parseInt(params.id[0], 10);
+    const paramsId = parseInt(params.id?.[0] ?? '', 10);
     const authHeader = request.headers.get('Auth');
     if (authHeader !== 'admin') {
       return HttpResponse.json(

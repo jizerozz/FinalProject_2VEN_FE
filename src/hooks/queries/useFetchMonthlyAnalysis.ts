@@ -28,6 +28,7 @@ const useFetchMonthlyAnalysis = (
       };
     },
     enabled: !!strategyId,
+    staleTime: Infinity,
     placeholderData: keepPreviousData,
   });
 

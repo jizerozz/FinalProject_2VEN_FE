@@ -28,6 +28,7 @@ const useFetchDailyAnalysis = (
       };
     },
     enabled: !!strategyId,
+    staleTime: Infinity,
     placeholderData: keepPreviousData,
   });
 

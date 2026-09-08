@@ -1,8 +1,8 @@
 import { css } from '@emotion/react';
 
-import TraderUserImage3 from '@/assets/images/ani_trader.png';
-import TraderUserImage1 from '@/assets/images/apt_trader.png';
-import TraderUserImage2 from '@/assets/images/nimo_trader.png';
+import TraderUserImage3 from '@/assets/images/ani_trader.webp';
+import TraderUserImage1 from '@/assets/images/apt_trader.webp';
+import TraderUserImage2 from '@/assets/images/nimo_trader.webp';
 import theme from '@/styles/theme';
 
 interface TraderStatsProps {
