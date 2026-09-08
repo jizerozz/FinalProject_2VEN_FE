@@ -8,7 +8,10 @@
     "build": "tsc -b && vite build",
     "lint": "eslint \"src/**/*.{ts,tsx}\" --fix",
     "preview": "vite preview",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "chromatic": "npx chromatic --project-token=$CHROMATIC_PROJECT_TOKEN"
   },
   "lint-staged": {
     "*.{js, jsx,ts,tsx}": [
@@ -37,13 +40,22 @@
     "zustand": "^4.5.0"
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "^3.2.6",
     "@emotion/babel-plugin": "^11.12.0",
+    "@storybook/addon-essentials": "^8.6.11",
+    "@storybook/addon-onboarding": "^8.6.11",
+    "@storybook/blocks": "^8.6.11",
+    "@storybook/react": "^8.6.11",
+    "@storybook/react-vite": "^8.6.11",
+    "@storybook/test": "^8.6.11",
     "@tanstack/eslint-plugin-query": "^5.20.1",
+    "@types/node": "^22.13.14",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
     "@typescript-eslint/eslint-plugin": "^7.17.0",
     "@typescript-eslint/parser": "^7.17.0",
     "@vitejs/plugin-react": "^4.2.1",
+    "chromatic": "^11.27.0",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-import-resolver-typescript": "^3.6.1",
@@ -54,10 +66,13 @@
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
+    "eslint-plugin-storybook": "^0.12.0",
     "husky": "^8.0.0",
+    "jsdom": "^26.1.0",
     "lint-staged": "^15.2.10",
     "msw": "^2.6.0",
     "prettier": "^3.1.1",
+    "storybook": "^8.6.11",
     "typescript": "^5.2.2",
     "vite": "^5.3.4",
     "vite-tsconfig-paths": "^4.3.2"

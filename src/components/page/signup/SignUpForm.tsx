@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { css } from '@emotion/react';
 
 import Button from '@/components/common/Button';
-import Input from '@/components/common/Input';
+import TextField from '@/components/common/TextField';
 import VerificationInput from '@/components/page/signup/VerificationInput';
 import { useNicknameValidation } from '@/hooks/mutations/useNicknameValidation';
 import { UseSignupEmailVerification } from '@/hooks/mutations/useSignupEmailVerification';
@@ -169,40 +169,35 @@ const SignUpForm = ({ formData, setFormData }: SignUpFormProps) => {
   return (
     <div>
       <div css={inputGroupStyle}>
-        <label htmlFor='email' css={labelStyle}>
-          이메일
-        </label>
-        <div css={emailVerifyContainer}>
-          <div css={divGroupStyle}>
-            <Input
-              id='email'
-              type='text'
-              inputSize='md'
-              required
-              name='email'
-              placeholder='1234@naver.com'
-              value={formData.email}
-              onChange={handleEmailChange}
-              status={emailErrorMessage ? 'error' : 'default'}
-            />
-            {emailErrorMessage && <p css={messageStyle}>{emailErrorMessage}</p>}
-          </div>
-          <Button
-            type='button'
-            variant='primary'
-            size='sm'
-            width={100}
-            onClick={handleEmailVerification} // 인증요청
-          >
-            인증요청
-          </Button>
-        </div>
+        <TextField
+          id='email'
+          name='email'
+          type='text'
+          inputSize='md'
+          label='이메일'
+          labelPosition='left'
+          labelWidth={109}
+          required
+          placeholder='1234@naver.com'
+          value={formData.email}
+          onChange={handleEmailChange}
+          errorMessage={emailErrorMessage}
+        />
+        <Button
+          type='button'
+          variant='primary'
+          size='sm'
+          width={100}
+          onClick={handleEmailVerification} // 인증요청
+        >
+          인증요청
+        </Button>
       </div>
       <div css={inputGroupStyle}>
         <label htmlFor='auth_code' css={labelStyle}>
           인증번호
         </label>
-        <div css={divGroupStyle}>
+        <div css={authCodeStyle}>
           <form css={formStyle} onSubmit={handleCodeVerification}>
             <VerificationInput
               id='auth_code'
@@ -236,106 +231,76 @@ const SignUpForm = ({ formData, setFormData }: SignUpFormProps) => {
 
       {/* 비밀번호 입력 폼 */}
       <div css={inputGroupStyle}>
-        <label htmlFor='password' css={labelStyle}>
-          비밀번호
-        </label>
-        <div css={divGroupStyle}>
-          <Input
-            id='password'
-            name='password'
-            type='password'
-            inputSize='md'
-            placeholder='영문 숫자를 포함한 8자 이상'
-            value={formData.password}
-            onChange={handleInputChange}
-            status={
-              validationMessages.password
-                ? validationMessages.password.includes('사용 가능')
-                  ? 'success'
-                  : 'error'
-                : 'default'
-            }
-          />
-          {validationMessages.password && (
-            <p
-              css={[
-                messageStyle,
-                validationMessages.password.includes('사용 가능') && successMessageStyle,
-              ]}
-            >
-              {validationMessages.password}
-            </p>
-          )}
-        </div>
+        <TextField
+          id='password'
+          name='password'
+          type='password'
+          inputSize='md'
+          label='비밀번호'
+          labelPosition='left'
+          labelWidth={109}
+          placeholder='영문 숫자를 포함한 8자 이상'
+          value={formData.password}
+          onChange={handleInputChange}
+          helperText={
+            validationMessages.password?.includes('사용 가능')
+              ? validationMessages.password
+              : undefined
+          }
+          errorMessage={
+            validationMessages.password && !validationMessages.password.includes('사용 가능')
+              ? validationMessages.password
+              : ''
+          }
+        />
       </div>
 
       {/* 비밀번호 확인 입력 폼 */}
       <div css={inputGroupStyle}>
-        <label htmlFor='confirmPassword' css={labelStyle}>
-          비밀번호 확인
-        </label>
-        <div css={divGroupStyle}>
-          <Input
-            id='confirmPassword'
-            name='confirmPassword'
-            type='password'
-            inputSize='md'
-            placeholder='비밀번호를 한번 더 입력해주세요.'
-            value={formData.confirmPassword}
-            onChange={handleInputChange}
-            status={
-              validationMessages.confirmPassword
-                ? validationMessages.confirmPassword.includes('일치합니다')
-                  ? 'success'
-                  : 'error'
-                : 'default'
-            }
-          />
-          {validationMessages.confirmPassword && (
-            <p
-              css={[
-                messageStyle,
-                validationMessages.confirmPassword.includes('일치합니다') && successMessageStyle,
-              ]}
-            >
-              {validationMessages.confirmPassword}
-            </p>
-          )}
-        </div>
+        <TextField
+          id='confirmPassword'
+          name='confirmPassword'
+          type='password'
+          inputSize='md'
+          label='비밀번호 확인'
+          labelPosition='left'
+          labelWidth={109}
+          placeholder='비밀번호를 한번 더 입력해주세요.'
+          value={formData.confirmPassword}
+          onChange={handleInputChange}
+          helperText={
+            validationMessages.confirmPassword?.includes('일치합니다')
+              ? validationMessages.confirmPassword
+              : undefined
+          }
+          errorMessage={
+            validationMessages.confirmPassword &&
+            !validationMessages.confirmPassword.includes('일치합니다')
+              ? validationMessages.confirmPassword
+              : ''
+          }
+        />
       </div>
 
       {/* 닉네임 입력 폼 */}
       <div css={inputGroupStyle}>
-        <label htmlFor='nickname' css={labelStyle}>
-          닉네임
-        </label>
-        <div css={divGroupStyle}>
-          <Input
-            id='nickname'
-            name='nickname'
-            inputSize='md'
-            placeholder='사용할 닉네임을 입력해주세요.'
-            value={formData.nickname}
-            onChange={handleInputChange}
-            status={
-              nicknameMessage
-                ? nicknameMessage.includes('사용 가능한 닉네임')
-                  ? 'success'
-                  : 'error'
-                : 'default'
-            }
-          />
-          {nicknameMessage && (
-            <p
-              css={[
-                messageStyle,
-                nicknameMessage.includes('사용 가능한 닉네임') && successMessageStyle,
-              ]}
-            >
-              {nicknameMessage}
-            </p>
-          )}
-        </div>
+        <TextField
+          id='nickname'
+          name='nickname'
+          inputSize='md'
+          label='닉네임'
+          labelPosition='left'
+          labelWidth={109}
+          placeholder='사용할 닉네임을 입력해주세요.'
+          value={formData.nickname}
+          onChange={handleInputChange}
+          helperText={nicknameMessage?.includes('사용 가능한 닉네임') ? nicknameMessage : undefined}
+          errorMessage={
+            nicknameMessage && !nicknameMessage.includes('사용 가능한 닉네임')
+              ? nicknameMessage
+              : ''
+          }
+        />
         <Button
           variant='primary'
           size='sm'
@@ -349,36 +314,27 @@ const SignUpForm = ({ formData, setFormData }: SignUpFormProps) => {
 
       {/* 전화번호 입력 폼 */}
       <div css={inputGroupStyle}>
-        <label htmlFor='phoneNumber' css={labelStyle}>
-          휴대폰번호
-        </label>
-        <div css={divGroupStyle}>
-          <Input
-            id='phoneNumber'
-            name='phoneNumber'
-            inputSize='md'
-            placeholder='01012345678'
-            value={formData.phoneNumber}
-            onChange={handleInputChange}
-            status={
-              validationMessages.phoneNumber
-                ? validationMessages.phoneNumber.includes('사용 가능')
-                  ? 'success'
-                  : 'error'
-                : 'default'
-            }
-          />
-          {validationMessages.phoneNumber && (
-            <p
-              css={[
-                messageStyle,
-                validationMessages.phoneNumber.includes('사용 가능') && successMessageStyle,
-              ]}
-            >
-              {validationMessages.phoneNumber}
-            </p>
-          )}
-        </div>
+        <TextField
+          id='phoneNumber'
+          name='phoneNumber'
+          inputSize='md'
+          label='휴대폰번호'
+          labelPosition='left'
+          labelWidth={109}
+          placeholder='01012345678'
+          value={formData.phoneNumber}
+          onChange={handleInputChange}
+          helperText={
+            validationMessages.phoneNumber?.includes('사용 가능')
+              ? validationMessages.phoneNumber
+              : undefined
+          }
+          errorMessage={
+            validationMessages.phoneNumber && !validationMessages.phoneNumber.includes('사용 가능')
+              ? validationMessages.phoneNumber
+              : ''
+          }
+        />
       </div>
     </div>
   );
@@ -396,14 +352,10 @@ const inputGroupStyle = css`
   }
   button {
     margin-left: 12px;
+    flex-shrink: 0;
   }
 `;
 
-const emailVerifyContainer = css`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
 const formStyle = css`
   display: flex;
   justify-content: center;
@@ -426,23 +378,20 @@ const labelStyle = css`
   font-weight: ${theme.typography.fontWeight.regular};
   line-height: ${theme.typography.lineHeights.lg};
 `;
-const divGroupStyle = css`
+
+const authCodeStyle = css`
   position: relative;
-  display: flex;
-  flex-direction: column;
-  p {
-    position: absolute;
-    left: 0;
-    text-indent: 5px;
-    bottom: -20px;
-  }
 `;
+
 const messageStyle = css`
-  margin-top: 16px;
-  text-align: center;
-  color: ${theme.colors.main.alert};
+  position: absolute;
+  left: 0;
+  bottom: -20px;
   font-size: ${theme.typography.fontSizes.caption};
   line-height: ${theme.typography.lineHeights.sm};
+  color: ${theme.colors.main.alert};
+  margin: 0;
+  text-indent: 5px;
 `;
 const successMessageStyle = css`
   color: ${theme.colors.main.primary};

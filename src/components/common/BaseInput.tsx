@@ -1,33 +1,32 @@
-import { InputHTMLAttributes } from 'react';
+import { forwardRef, InputHTMLAttributes } from 'react';
 
 import { css, SerializedStyles } from '@emotion/react';
 
 import theme from '@/styles/theme';
 
-export type InputSize = 'small' | 'medium' | 'large';
+export type InputSize = 'sm' | 'md' | 'lg';
 export type InputStatus = 'default' | 'error' | 'success';
 
 export interface BaseInputProps extends InputHTMLAttributes<HTMLInputElement> {
-  variant?: InputSize;
+  inputSize?: InputSize;
   status?: InputStatus;
   customStyle?: SerializedStyles;
 }
 
-const BaseInput: React.FC<BaseInputProps> = ({
-  variant = 'medium',
-  status = 'default',
-  customStyle,
-  ...props
-}) => {
-  const currentInputStyles = [
-    baseInputStyles,
-    inputSizeStyles[variant],
-    inputStatusStyles[status],
-    customStyle,
-  ];
+const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
+  ({ inputSize = 'md', status = 'default', customStyle, ...props }, ref) => {
+    const currentInputStyles = [
+      baseInputStyles,
+      inputSizeStyles[inputSize],
+      inputStatusStyles[status],
+      customStyle,
+    ];
 
-  return <input {...props} css={currentInputStyles} />;
-};
+    return <input ref={ref} {...props} css={currentInputStyles} />;
+  }
+);
+
+BaseInput.displayName = 'BaseInput';
 
 export default BaseInput;
 
@@ -60,17 +59,17 @@ const baseInputStyles = css`
 `;
 
 const inputSizeStyles = {
-  small: css`
+  sm: css`
     height: ${theme.input.height.sm};
     padding: ${theme.input.padding.sm};
     font-size: ${theme.input.fontSize.sm};
   `,
-  medium: css`
+  md: css`
     height: ${theme.input.height.md};
     padding: ${theme.input.padding.md};
     font-size: ${theme.input.fontSize.md};
   `,
-  large: css`
+  lg: css`
     height: ${theme.input.height.lg};
     padding: ${theme.input.padding.lg};
     font-size: ${theme.input.fontSize.lg};

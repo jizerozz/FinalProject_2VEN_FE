@@ -131,7 +131,7 @@ const Header = () => {
         <div css={logoNavContainerStyle}>
           <h1>
             <Link to={ROUTES.HOME.PATH} css={linkStyle}>
-              <img src='/logo.svg' alt={LOGO} />
+              <img src='/logo.svg' alt={LOGO} width={235} />
             </Link>
           </h1>
           <GlobalNav />

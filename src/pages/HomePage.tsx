@@ -3,8 +3,8 @@ import { MdKeyboardArrowRight, MdArrowForward } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 
 import EverageMetricsChartImage from '@/assets/images/everage_metrics_chart.png';
-import InvestorMainImage from '@/assets/images/investor_main.png';
-import TraderMainImage from '@/assets/images/trader_main.png';
+import InvestorMainImage from '@/assets/images/investor_main.webp';
+import TraderMainImage from '@/assets/images/trader_main.webp';
 import Avatar from '@/components/common/Avatar';
 import Button from '@/components/common/Button';
 import Loader from '@/components/common/Loading';

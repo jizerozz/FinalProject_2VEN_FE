@@ -51,7 +51,7 @@ const SearchInput = () => {
 
   return (
     <div css={searchContainerStyles}>
-      <button type='button' onClick={handleButtonClick} css={searchIconStyles}>
+      <button type='button' aria-label='search' onClick={handleButtonClick} css={searchIconStyles}>
         <FiSearch size={24} />
       </button>
       <BaseInput
@@ -66,7 +66,7 @@ const SearchInput = () => {
         `}
       />
       {searchValue && (
-        <button type='button' onClick={handleClear} css={clearButtonStyles}>
+        <button type='button' aria-label='search' onClick={handleClear} css={clearButtonStyles}>
           <IoIosCloseCircle size={24} />
         </button>
       )}

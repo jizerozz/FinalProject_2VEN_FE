@@ -25,3 +25,9 @@ dist-ssr
 .env.local
 # Local Netlify folder
 .netlify
+
+# TypeScript build cache
+*.tsbuildinfo
+
+
+*storybook.log

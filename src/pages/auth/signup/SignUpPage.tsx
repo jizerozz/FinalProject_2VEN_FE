@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { css } from '@emotion/react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -8,6 +8,7 @@ import SignUpForm from '@/components/page/signup/SignUpForm';
 import TermsContainer from '@/components/terms/TermsContainer';
 import { ROUTES } from '@/constants/routes';
 import { useSignupMutation } from '@/hooks/useSignupMutation';
+import { useSignupStore } from '@/stores/signupStore';
 import theme from '@/styles/theme';
 import { HomeRouteState } from '@/types/route';
 import { TermsState } from '@/types/signup';
@@ -24,6 +25,7 @@ const SignUpPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { userRole } = (location.state as HomeRouteState) || {};
+  const { actions } = useSignupStore();
 
   // 폼 데이터 상태 관리
   const [formData, setFormData] = useState<FormData>({
@@ -42,6 +44,10 @@ const SignUpPage: React.FC = () => {
     marketingOptional: false,
     promotionOptional: false,
   });
+
+  useEffect(() => {
+    actions.resetNicknameState();
+  }, [actions]);
 
   // 회원가입 mutation
   const signupMutation = useSignupMutation({

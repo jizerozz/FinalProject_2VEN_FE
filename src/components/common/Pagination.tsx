@@ -40,10 +40,10 @@ const Pagination = ({ totalPage, limit, page, setPage }: paginationProps) => {
   return (
     <div css={PaginationWrapper}>
       <button css={ArrowBtn} onClick={handleFirst} disabled={page === 1}>
-        <MdKeyboardDoubleArrowLeft size={24} />
+        <MdKeyboardDoubleArrowLeft size={22} />
       </button>
       <button css={ArrowBtn} onClick={handlePrevious} disabled={page === 1}>
-        <MdKeyboardArrowLeft size={24} />
+        <MdKeyboardArrowLeft size={22} />
       </button>
       {pages.map((pageNum) => (
         <button
@@ -58,10 +58,10 @@ const Pagination = ({ totalPage, limit, page, setPage }: paginationProps) => {
         </button>
       ))}
       <button css={ArrowBtn} onClick={handleNext} disabled={page === totalPage}>
-        <MdKeyboardArrowRight size={24} />
+        <MdKeyboardArrowRight size={22} />
       </button>
       <button css={ArrowBtn} onClick={handleEnd} disabled={page === totalPage}>
-        <MdKeyboardDoubleArrowRight size={24} />
+        <MdKeyboardDoubleArrowRight size={22} />
       </button>
     </div>
   );
@@ -80,6 +80,7 @@ const PaginationWrapper = css`
     font-weight: ${theme.typography.fontWeight.regular};
     line-height: ${theme.typography.lineHeights.lg};
     background-color: inherit;
+    border: none;
     border-radius: 4px;
     color: ${theme.colors.gray[400]};
     width: 24px;

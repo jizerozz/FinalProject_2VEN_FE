@@ -6,30 +6,30 @@ import { ROUTES } from '@/constants/routes';
 import theme from '@/styles/theme';
 
 interface TitleProps {
-  title?: string;
-  traderId?: string;
-  traderName?: string;
-  imgUrl?: string;
+  strategyTitle?: string;
+  memberId?: string;
+  nickname?: string;
+  profilePath?: string;
   date?: string;
-  followers?: number;
-  minimumInvestment?: string;
-  lastUpdatedDate?: string;
+  followersCount?: number;
+  minInvestmentAmount?: string;
+  endDate?: string;
 }
 
 const StrategyTitleSection = ({
-  title,
-  traderId,
-  traderName,
-  imgUrl,
+  strategyTitle,
+  memberId,
+  nickname,
+  profilePath,
   date,
-  followers,
-  minimumInvestment,
-  lastUpdatedDate,
+  followersCount,
+  minInvestmentAmount,
+  endDate,
 }: TitleProps) => {
   const navigate = useNavigate();
 
-  const handleMoveProfile = (traderId: string) => {
-    navigate(`${ROUTES.TRADER.PROFILE(traderId)}`);
+  const handleMoveProfile = (memberId: string) => {
+    navigate(`${ROUTES.TRADER.PROFILE(memberId)}`);
   };
 
   const InfoSection = ({ title, data }: { title: string; data?: number | string }) => (
@@ -45,21 +45,21 @@ const StrategyTitleSection = ({
     <div css={containerStyle}>
       <div css={titleAreaStyle}>
         <div css={infoAreaStyle}>
-          <div css={titleStyle}>{title}</div>
+          <div css={titleStyle}>{strategyTitle}</div>
           <span css={postDateStyle}>작성일자 {date}</span>
           <div css={infoSectionStyle}>
             <div css={authorInfoStyle}>
-              <button onClick={() => handleMoveProfile(traderId || '')} css={authorDetailsStyle}>
-                <Avatar src={imgUrl} alt='트레이더 프로필' size={80} />
+              <button onClick={() => handleMoveProfile(memberId || '')} css={authorDetailsStyle}>
+                <Avatar src={profilePath} alt='트레이더 프로필' size={80} />
                 <div css={followerAreaStyle}>
                   <div css={traderTextStyle}>트레이더</div>
-                  <div css={followerTextStyle}>{traderName}</div>
+                  <div css={followerTextStyle}>{nickname}</div>
                 </div>
               </button>
             </div>
-            <InfoSection title={'팔로워'} data={followers} />
-            <InfoSection title={'최소운용가능금액'} data={minimumInvestment} />
-            <InfoSection title={'최종손익입력날짜'} data={lastUpdatedDate} />
+            <InfoSection title={'팔로워'} data={followersCount} />
+            <InfoSection title={'최소운용가능금액'} data={minInvestmentAmount} />
+            <InfoSection title={'최종손익입력날짜'} data={endDate} />
           </div>
         </div>
       </div>

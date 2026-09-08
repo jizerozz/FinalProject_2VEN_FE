@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import Button from '@/components/common/Button';
-import Input from '@/components/common/Input';
+import TextField from '@/components/common/TextField';
 import Toast from '@/components/common/Toast';
 import { AUTH_TEXT } from '@/constants/auth';
 import { ROUTES } from '@/constants/routes';
@@ -96,35 +96,35 @@ const SignInPage: React.FC = () => {
     <div css={containerStyle}>
       <h3 css={pageHeadingStyle}>{AUTH_TEXT.title}</h3>
       <form css={formStyle} onSubmit={handleSubmit}>
-        <div css={divStyle}>
-          <Input
-            ref={emailInputRef}
-            type='text'
-            inputSize='lg'
-            leftIcon='mail'
-            placeholder={AUTH_TEXT.input.email.placeholder}
-            showClearButton
-            value={email}
-            onChange={handleEmailChange}
-            status={errorField === 'email' ? 'error' : 'default'}
-          />
-        </div>
-        <div>
-          <Input
-            ref={passwordInputRef}
-            type='password'
-            inputSize='lg'
-            leftIcon='key'
-            rightIcon='eye'
-            placeholder={AUTH_TEXT.input.password.placeholder}
-            value={password}
-            onChange={handlePasswordChange}
-            status={errorField === 'password' ? 'error' : 'default'}
-          />
-          <Button type='submit' width={400} css={buttonStyle} disabled={!email || !password}>
-            {AUTH_TEXT.button.submit}
-          </Button>
-        </div>
+        <TextField
+          ref={emailInputRef}
+          type='text'
+          inputSize='lg'
+          leftIcon='mail'
+          placeholder={AUTH_TEXT.input.email.placeholder}
+          showClearButton
+          value={email}
+          onChange={handleEmailChange}
+          status={errorField === 'email' ? 'error' : 'default'}
+          containerStyle={fieldStyle}
+        />
+
+        <TextField
+          ref={passwordInputRef}
+          type='password'
+          inputSize='lg'
+          leftIcon='key'
+          rightIcon='eye'
+          placeholder={AUTH_TEXT.input.password.placeholder}
+          value={password}
+          onChange={handlePasswordChange}
+          status={errorField === 'password' ? 'error' : 'default'}
+          containerStyle={fieldStyle}
+        />
+
+        <Button type='submit' width={400} css={buttonStyle} disabled={!email || !password}>
+          {AUTH_TEXT.button.submit}
+        </Button>
       </form>
       {errorMessage && <p css={messageStyle}>{errorMessage}</p>}
       <ul css={signinLinkStyle}>
@@ -158,18 +158,20 @@ const pageHeadingStyle = css`
   margin-bottom: 32px;
 `;
 const formStyle = css`
+  display: flex;
   flex-direction: column;
+  gap: 12px;
 
   input {
     width: 400px;
     text-indent: 10px;
   }
 `;
-const divStyle = css`
-  margin-bottom: 12px;
+const fieldStyle = css`
+  width: 400px;
 `;
 const buttonStyle = css`
-  margin-top: 24px;
+  margin-top: 12px;
 `;
 const signinLinkStyle = css`
   display: flex;

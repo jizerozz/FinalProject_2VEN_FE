@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import { Link } from 'react-router-dom';
 
+import Avatar from '@/components/common/Avatar';
 import LineChart from '@/components/common/LineChart';
 import theme from '@/styles/theme';
 import { formatRate } from '@/utils/statistics';
@@ -43,11 +44,7 @@ const TopStrategyList = ({ rankingData }: TopStrategyListProps) => {
               <div css={strategyStyle}>
                 <div css={strategyTitleStyle}>{data.strategyTitle}</div>
                 <div css={traderInfoStyle}>
-                  <img
-                    src={data.profilePath || '/default-image.png'}
-                    alt={`${data.nickname} 이미지`}
-                    css={traderImageStyle}
-                  />
+                  <Avatar src={data.profilePath} alt={data.nickname} size={32} />
                   <span css={traderNicknameStyle}>{data.nickname}</span>
                 </div>
               </div>
@@ -166,12 +163,6 @@ const traderInfoStyle = css`
   gap: 8px;
   text-align: center;
   align-items: center;
-`;
-
-const traderImageStyle = css`
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
 `;
 
 const traderNicknameStyle = css`

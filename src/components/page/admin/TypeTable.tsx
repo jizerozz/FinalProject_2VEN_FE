@@ -4,6 +4,7 @@ import { css, SerializedStyles } from '@emotion/react';
 
 import Button from '@/components/common/Button';
 import Checkbox from '@/components/common/Checkbox';
+import StrategyIcon from '@/components/common/StrategyIcon';
 import theme from '@/styles/theme';
 
 export interface TypeTableProps {
@@ -80,7 +81,12 @@ const TypeTable = ({
                   />
                 </td>
                 <td css={tableCellStyle} colSpan={4}>
-                  <img src={row.icon} alt={row.icon} css={tableImgStyle} />
+                  <StrategyIcon
+                    src={row.icon}
+                    label={row.title}
+                    alt={row.title}
+                    css={tableImgStyle}
+                  />
                 </td>
                 <td css={tableCellStyle} colSpan={3}>
                   {row.title}
@@ -146,8 +152,8 @@ const tableCellStyle = css`
 const tableImgStyle = css`
   display: block;
   margin: 0 auto;
-  height: 30px;
-  object-fit: cover;
+  height: 22px;
+  object-fit: contain;
 `;
 
 export default TypeTable;

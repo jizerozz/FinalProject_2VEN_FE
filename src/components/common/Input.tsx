@@ -1,27 +1,26 @@
 import React, { forwardRef, RefObject, useEffect, useState } from 'react';
 
 import { css, SerializedStyles } from '@emotion/react';
-import { FiSearch } from 'react-icons/fi'; // 검색 아이콘
-import { GrMailOption } from 'react-icons/gr'; // 메일 아이콘
-import { IoIosCloseCircle, IoMdEye, IoMdEyeOff } from 'react-icons/io'; // 키, 눈, 닫기 아이콘
+import { GrMailOption } from 'react-icons/gr';
+import { IoIosCloseCircle, IoMdEye, IoMdEyeOff } from 'react-icons/io';
 import { RiKeyFill } from 'react-icons/ri';
 
+import BaseInput from '@/components/common/BaseInput';
 import theme from '@/styles/theme';
 
-export type InputSize = 'sm' | 'md' | 'lg'; // input 높이 사이즈
+export type InputSize = 'sm' | 'md' | 'lg';
 export type InputStatus = 'default' | 'error' | 'success';
-export type IconPosition = 'left' | 'right';
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   inputSize?: InputSize;
   width?: string | number;
   status?: InputStatus;
-  leftIcon?: 'mail' | 'key' | 'search';
+  leftIcon?: 'mail' | 'key';
   rightIcon?: 'eye' | 'clear';
   showClearButton?: boolean;
   isDisabled?: boolean;
   ref?: RefObject<HTMLInputElement>;
-  customStyle?: SerializedStyles; // 사용되는 페이지에서 추가적인 스타일을 적용할 때 사용
+  customStyle?: SerializedStyles;
   validate?: (value: string) => { isValid: boolean; message: string };
   onInputValidation?: (isValid: boolean) => void;
 }
@@ -36,15 +35,18 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     showClearButton = false,
     isDisabled = false,
     customStyle,
-    validate, // 입력값 검증 함수
-    onInputValidation, // 입력값 검증 결과 콜백 함수
+    validate,
+    onInputValidation,
     ...inputProps
   } = props;
-  const [inputValue, setInputValue] = useState<string>((props.value as string) || '');
+
+  // UI 상태만 관리
   const [inputStatus, setInputStatus] = useState<InputStatus>(status);
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
-  // 아이콘에 따른 아이콘 컴포넌트 반환
+  const inputValue = (props.value as string) || '';
+
+  // 아이콘 매핑
   const getIcon = (iconName: string) => {
     switch (iconName) {
       case 'mail':
@@ -55,19 +57,18 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         return showPassword ? <IoMdEyeOff /> : <IoMdEye />;
       case 'clear':
         return <IoIosCloseCircle />;
-      case 'search':
-        return <FiSearch />;
       default:
         return null;
     }
   };
 
+  // status prop 변경 시 동기화
   useEffect(() => {
     setInputStatus(status);
   }, [status]);
 
+  // validation 로직 (선택적)
   useEffect(() => {
-    // validate 함수가 존재하고 inputValue가 존재할 때 validation 체크
     if (validate && inputValue) {
       const validationResult = validate(inputValue);
       setInputStatus(validationResult.isValid ? 'success' : 'error');
@@ -75,15 +76,11 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     }
   }, [inputValue, validate, onInputValidation]);
 
-  // input 값이 변경될 때
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-    inputProps.onChange?.(e); // 부모 컴포넌트로 이벤트 전달
+    inputProps.onChange?.(e);
   };
 
-  // input clear 버튼 클릭 시
   const handleClear = () => {
-    setInputValue('');
     setInputStatus('default');
     if (inputProps.onChange) {
       const event = new Event('input', {
@@ -94,42 +91,22 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     }
   };
 
-  // input type이 password일 때, 눈 아이콘 클릭 시(토글)
   const handleTogglePassword = () => {
     setShowPassword((prev) => !prev);
   };
 
-  // width 값을 처리하는 함수 추가
-  const getWidthStyle = (width: string | number) => {
-    if (typeof width === 'number') {
-      return `width: ${width}px;`;
-    }
-    return width;
-  };
-
-  // container 스타일에 width를 동적으로 적용
-  const currentContainerStyles = css`
-    ${containerStyles};
-    width: ${getWidthStyle(width)};
+  // padding 스타일 계산
+  const dynamicPaddingStyles = css`
+    ${leftIcon && 'padding-left: 36px;'}
+    ${(rightIcon || (showClearButton && inputValue)) && 'padding-right: 36px;'}
   `;
 
-  // input 상태에 따른 스타일 적용
-  const currentInputStyles = [
-    baseInputStyles, // 기본 input 스타일
-    inputSizeStyles[inputSize], // input 사이즈에 따른 스타일
-    inputStatusStyles[inputStatus], // input 상태에 따른 스타일
-    leftIcon && paddingLeftStyles, // leftIcon이 있을 때 padding 적용
-    // rightIcon이 있거나 (leftIcon과 showClearButton이 모두 있고 inputValue가 있을 때)만 오른쪽 패딩 적용
-    (rightIcon || (leftIcon && showClearButton && inputValue)) && paddingRightStyles,
-    customStyle,
-  ];
-
   return (
-    <div css={[containerStyles, currentContainerStyles]}>
+    <div css={containerStyles} style={{ width: typeof width === 'number' ? `${width}px` : width }}>
       <div css={[wrapperStyles, iconSpacingStyles[inputSize]]}>
         {leftIcon && <div css={leftIconStyles}>{getIcon(leftIcon)}</div>}
 
-        <input
+        <BaseInput
           {...inputProps}
           ref={ref}
           type={
@@ -137,8 +114,13 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
           }
           value={inputValue}
           disabled={isDisabled}
-          css={currentInputStyles}
+          inputSize={inputSize}
+          status={inputStatus}
           onChange={handleInputChange}
+          customStyle={css`
+            ${dynamicPaddingStyles}
+            ${customStyle}
+          `}
         />
 
         {showClearButton && inputValue && inputStatus !== 'success' && (
@@ -156,6 +138,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     </div>
   );
 });
+
 Input.displayName = 'Input';
 
 const containerStyles = css`
@@ -170,56 +153,10 @@ const wrapperStyles = css`
   width: 100%;
 `;
 
-const baseInputStyles = css`
-  width: 100%;
-  border: 1px solid ${theme.colors.gray[300]};
-  background-color: ${theme.colors.main.white};
-  outline: none;
-  transition: all 0.2s ease;
-  font-family: 'Pretendard', sans-serif;
-  line-height: 150%;
-
-  &::placeholder {
-    color: ${theme.colors.gray[700] + '4a'};
-    font-weight: ${theme.typography.fontWeight.regular};
-  }
-
-  &:hover:not(:disabled) {
-    border-color: ${theme.colors.main.primary};
-  }
-
-  &:focus:not(:disabled) {
-    border-color: ${theme.colors.main.primary};
-  }
-
-  &:disabled {
-    background-color: ${theme.colors.gray[100]};
-    cursor: not-allowed;
-  }
-`;
-
-const inputSizeStyles = {
-  sm: css`
-    height: ${theme.input.height.sm};
-    padding: ${theme.input.padding.sm};
-    font-size: ${theme.input.fontSize.sm};
-  `,
-  md: css`
-    height: ${theme.input.height.md};
-    padding: ${theme.input.padding.md};
-    font-size: ${theme.input.fontSize.md};
-  `,
-  lg: css`
-    height: ${theme.input.height.lg};
-    padding: ${theme.input.padding.lg};
-    font-size: ${theme.input.fontSize.lg};
-  `,
-};
-
 const iconSpacingStyles = {
   sm: css`
     svg {
-      color: ${theme.colors.gray[400]}; //#a1a1aa
+      color: ${theme.colors.gray[400]};
       width: 20px;
       height: 20px;
     }
@@ -237,24 +174,6 @@ const iconSpacingStyles = {
       width: 24px;
       height: 24px;
     }
-  `,
-};
-
-const inputStatusStyles = {
-  default: css``,
-  error: css`
-    border-color: ${theme.colors.main.alert};
-
-    &:hover:not(:disabled) {
-      border-color: ${theme.colors.main.alert};
-    }
-
-    &:focus:not(:disabled) {
-      border-color: ${theme.colors.main.alert};
-    }
-  `,
-  success: css`
-    border-color: ${theme.colors.gray[400]};
   `,
 };
 
@@ -282,14 +201,6 @@ const leftIconStyles = css`
 const rightIconStyles = css`
   ${iconButtonStyles}
   right: 12px;
-`;
-
-const paddingLeftStyles = css`
-  padding-left: 36px;
-`;
-
-const paddingRightStyles = css`
-  padding-right: 36px;
 `;
 
 export default Input;
