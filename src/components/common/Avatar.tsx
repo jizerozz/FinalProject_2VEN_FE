@@ -1,6 +1,7 @@
 import { css, SerializedStyles } from '@emotion/react';
 
 import defaultImage from '@/assets/images/default_avatar.png';
+import SafeImage from '@/components/common/SafeImage';
 
 interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
   src?: string | null;
@@ -11,7 +12,7 @@ interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const Avatar = ({ src, alt, size = 40, customStyle, ...props }: AvatarProps) => (
   <div css={[avatarContainer(size), customStyle]} {...props}>
-    <img src={src || defaultImage} alt={alt} css={avatarStyle} />
+    <SafeImage src={src} fallbackSrc={defaultImage} alt={alt} css={avatarStyle} />
   </div>
 );
 

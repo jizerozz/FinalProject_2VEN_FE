@@ -1,8 +1,9 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { css } from '@emotion/react';
 
 import Button from '@/components/common/Button';
+import SafeImage from '@/components/common/SafeImage';
 import { useIconMutation, usePutIconMutation } from '@/hooks/mutations/useIconMutation';
 import theme from '@/styles/theme';
 import { UserRole } from '@/types/route';
@@ -31,6 +32,15 @@ const FileInput = ({
 }: FileInputProps) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [selectedFile, setSelectedFile] = useState<File>();
+  const [previewUrl, setPreviewUrl] = useState<string>();
+
+  useEffect(() => {
+    if (!selectedFile) return;
+    const url = URL.createObjectURL(selectedFile);
+    setPreviewUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [selectedFile]);
+
   const [fileName, setFileName] = useState(fname);
   const [iconUrl, setIconUrl] = useState(icon);
   const [iconTitle, setIconTitle] = useState(iconName);
@@ -101,10 +111,10 @@ const FileInput = ({
         onChange={handleNameChange}
       />
       <div css={titleStyle}>아이콘</div>
-      {selectedFile && (
-        <img src={URL.createObjectURL(selectedFile)} alt={selectedFile.name} css={imageStyle} />
+      {selectedFile && <SafeImage src={previewUrl} alt={selectedFile.name} css={imageStyle} />}
+      {icon && !selectedFile && (
+        <SafeImage src={iconUrl} alt={iconName || '아이콘'} css={imageStyle} />
       )}
-      {icon && !selectedFile && <img src={iconUrl} alt={icon} css={imageStyle} />}
       <div css={inputAndButtonContainerStyle}>
         <input type='text' value={iconTitle} readOnly css={inputStyleOverride} />
         <Button variant='secondary' size='sm' onClick={handleFileUpload} width={115}>

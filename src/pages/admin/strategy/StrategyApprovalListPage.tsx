@@ -6,6 +6,7 @@ import ContentModal from '@/components/common/ContentModal';
 import Loader from '@/components/common/Loading';
 import Modal from '@/components/common/Modal';
 import Pagination from '@/components/common/Pagination';
+import StrategyIcon from '@/components/common/StrategyIcon';
 import Toast from '@/components/common/Toast';
 import RejectTextarea from '@/components/page/admin/RejectTextarea';
 import StrategyOperationStatus from '@/components/page/admin/StrategyOperationStatus';
@@ -167,11 +168,14 @@ const StrategyApprovalListPage = () => {
                     <div>
                       <p>{strategy.strategyTitle}</p>
                       <div className='badge-container'>
-                        {strategy.investmentAssetClassesIcons
-                          ?.slice(0, 2)
-                          .map((icon, index) => (
-                            <img key={`${icon}-${index}`} src={icon} alt='icon' height={18} />
-                          ))}
+                        {strategy.investmentAssetClassesIcons?.slice(0, 2).map((icon, index) => (
+                          <StrategyIcon
+                            key={`${icon}-${index}`}
+                            src={icon}
+                            alt='icon'
+                            height={22}
+                          />
+                        ))}
                         {strategy.investmentAssetClassesIcons.length > 2 && (
                           <div className='count-container'>
                             +{strategy.investmentAssetClassesIcons.length - 2}
@@ -186,7 +190,7 @@ const StrategyApprovalListPage = () => {
                   <td>{formatDate(strategy.requestDatetime)}</td>
                   <td>
                     <div css={tradingTypeIconContainer}>
-                      <img src={strategy.tradingTypeIcon} alt='icon' />
+                      <StrategyIcon src={strategy.tradingTypeIcon} alt='매매유형' height={22} />
                     </div>
                   </td>
                   <td>{getPostStatus(strategy.isPosted)}</td>
@@ -291,7 +295,7 @@ const tableContainerStyle = css`
         text-align: center;
 
         &:first-of-type {
-          padding: 0 20px;
+          padding: 12px 20px;
 
           p {
             width: 100%;
@@ -306,6 +310,7 @@ const tableContainerStyle = css`
 
           div.badge-container {
             display: flex;
+            flex-wrap: wrap;
             align-items: center;
             gap: 4px;
             width: 100%;
@@ -365,7 +370,8 @@ const tradingTypeIconContainer = css`
   display: flex;
   justify-content: center;
   img {
-    width: 32px;
+    height: 22px;
+    width: auto;
   }
 `;
 

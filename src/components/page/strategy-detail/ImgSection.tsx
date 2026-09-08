@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { css } from '@emotion/react';
 import { AiOutlineClose } from 'react-icons/ai';
 
 import Checkbox from '@/components/common/Checkbox';
+import SafeImage from '@/components/common/SafeImage';
 import theme from '@/styles/theme';
 
 interface imgSectionProps {
@@ -15,24 +16,57 @@ interface imgSectionProps {
   onSelect: (id: number) => void;
 }
 
-const ImgSection = ({ img, id, name, isSelected, isSelfed, onSelect }: imgSectionProps) => {
+const ImgSection = (props: imgSectionProps) => {
+  const { img } = props;
+  return <ImageSectionContent key={img} {...props} />;
+};
+
+const ImageSectionContent = ({
+  img,
+  id,
+  name,
+  isSelected,
+  isSelfed,
+  onSelect,
+}: imgSectionProps) => {
   const [isVisible, setIsVisible] = useState(false);
+  const [loadedSrc, setLoadedSrc] = useState<string | null>(null);
+  const canExpand = Boolean(img?.trim()) && loadedSrc === img;
+
+  useEffect(() => {
+    if (!isVisible || !canExpand) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isVisible, canExpand]);
 
   const handleImgClick = () => {
-    document.body.style.overflow = 'hidden';
-    setIsVisible(true);
+    if (canExpand) setIsVisible(true);
   };
 
   const handleClose = () => {
-    document.body.style.overflow = 'auto';
     setIsVisible(false);
   };
 
   return (
     <div css={imgWrapper}>
       <div css={imgContent}>
-        <button onClick={handleImgClick} css={imgSection}>
-          <img src={img} alt={name} css={imgSection} />
+        <button
+          type='button'
+          disabled={!canExpand}
+          onClick={handleImgClick}
+          css={imgSection}
+          aria-label={`${name} 확대`}
+        >
+          <SafeImage
+            src={img}
+            alt={name}
+            css={imgSection}
+            onLoad={() => setLoadedSrc(img)}
+            onError={() => setLoadedSrc(null)}
+          />
         </button>
         {isSelfed ? (
           <Checkbox checked={isSelected ?? false} onChange={() => onSelect(id)}>
@@ -42,10 +76,17 @@ const ImgSection = ({ img, id, name, isSelected, isSelfed, onSelect }: imgSectio
           <div>{name}</div>
         )}
       </div>
-      {isVisible && (
+      {isVisible && canExpand && (
         <div css={overlay}>
-          <AiOutlineClose onClick={handleClose} size={40} css={closeIconStyle} />
-          <img src={img} alt={name} css={expandedImg} />
+          <button
+            type='button'
+            onClick={handleClose}
+            css={closeIconStyle}
+            aria-label='이미지 확대 닫기'
+          >
+            <AiOutlineClose size={40} aria-hidden='true' />
+          </button>
+          <SafeImage src={img} alt={name} css={expandedImg} onError={handleClose} />
         </div>
       )}
     </div>
@@ -63,7 +104,10 @@ const imgSection = css`
   height: 163px;
   object-fit: cover;
   cursor: pointer;
-  &:hover {
+  &:disabled {
+    cursor: default;
+  }
+  button&:hover:not(:disabled) {
     border: 1px solid ${theme.colors.main.primary};
   }
 `;

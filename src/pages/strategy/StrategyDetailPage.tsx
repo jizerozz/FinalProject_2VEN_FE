@@ -127,6 +127,14 @@ const StrategyDetailPage = () => {
     ) || []),
   ];
 
+  const iconLabels = [
+    strategy?.tradingTypeName,
+    strategy?.tradingCycleName,
+    ...(strategy?.strategyIACEntities.map(
+      (item: StrategyIacentity) => item.investmentAssetClassesName
+    ) || []),
+  ];
+
   const handleDeleteDetail = (id: number) => {
     openModal({
       type: 'warning',
@@ -208,7 +216,7 @@ const StrategyDetailPage = () => {
               onEnd={() => handleDetailEnd(strategy.strategyId, role)}
               refetch={strategy && refetch}
             />
-            <IconTagSection imgs={icons} />
+            <IconTagSection imgs={icons} labels={iconLabels} />
             <StrategyTitleSection
               {...strategy}
               date={formatDate(strategy?.writedAt || '', 'withDayTime')}
